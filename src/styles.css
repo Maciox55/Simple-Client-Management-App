@@ -1,0 +1,12 @@
+/* You can add global styles to this file, and also import other style files */
+.sidebar{
+    height: 92vh;
+}
+.register{
+    margin-top: 10%;
+    padding: 30px;
+}
+
+.modal{
+    height: 100%;
+    }

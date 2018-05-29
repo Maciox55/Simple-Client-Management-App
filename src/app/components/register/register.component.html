@@ -1,0 +1,42 @@
+<div class="row ">
+    <form class="col s6 offset-s3 register" #f="ngForm"  (ngSubmit)="onSubmit(f)" novalidate>
+      <h1>Register</h1>  
+      
+        <div class="row">
+          <div class="input-field col s6">
+            <input class="validate"  placeholder="username"  name="username"  type="text" required minlength="4" #username="ngModel" [(ngModel)]="model.username">
+            <label for="username">Username</label>
+          </div>
+          <div class="input-field col s6">
+              <input class="validate" placeholder="Password" name="password" type="password" required minlength="6" #password="ngModel" [(ngModel)]="model.password">
+              <label for="password">Password</label>
+            </div>
+        </div>
+        <div class="row">
+          <div class="input-field col s12"
+            [ngClass]="{
+                'has-danger': email.invalid && (email.dirty || email.touched),
+                'has-success': email.valid && (email.dirty || email.touched)
+            }">
+              <input class="validate" placeholder="Email" name="email" type="email" required [(ngModel)]="model.email" #email="ngModel" pattern="[^ @]*@[^ @]*">
+              <label for="email">Email</label>
+              <a href="/login">Already have an account?</a>
+          </div>
+        <div class="form-control-feedback" *ngIf="email.errors && (email.dirty || email.touched)">
+            <p *ngIf="email.errors.required"> Email is Required</p>
+            <p *ngIf="email.errors.pattern"> Email must contain @ character</p>
+        </div>
+        <div class="form-control-feedback" *ngIf="username.errors && (username.dirty || username.touched)">
+            <p *ngIf="username.errors.required"> Username is Required</p>
+            <p *ngIf="username.errors.minlength"> Username must be atleast 4 characters in length</p>
+        </div>
+        <div class="form-control-feedback" *ngIf="password.errors && (password.dirty || password.touched)">
+            <p *ngIf="password.errors.required"> Password is Required</p>
+            <p *ngIf="password.errors.minlength"> Password must be atleast 6 characters in length</p>
+        </div>
+          <div class="input-field col s6">
+              <button class="btn waves-effect waves-light" type="submit" name="action" [disabled]="f.invalid" >Submit</button>
+          </div>
+        </div>
+    </form>
+</div>

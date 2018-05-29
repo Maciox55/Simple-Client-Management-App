@@ -1,0 +1,88 @@
+<div class="col s2 sidebar grey lighten-5">
+    
+</div>
+  
+    <!--Main content -->
+<div class="col s10 ">
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Street</th>
+                <th>Webite</th>
+                <th>Email</th>
+                <th>Package Active</th>
+                <th>Package Expires</th>
+                <th>Amount Due</th>
+                <th></th>
+                <th></th>                
+                
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let client of clients " >
+                <td>{{client.name}}</td>
+                <td>{{client.street}}</td>
+                <td><a href="{{client.website}}">{{client.website}}</a></td>
+                <td>{{client.email}}</td>
+                <td>{{client.packageActive}}</td>
+                <td>{{client.packageExpires | date:'MM/dd/yyyy'}}</td>
+                <td>{{client.paymentDue | currency:"USD$":2}}</td>
+                
+                <td><button class="btn waves-effect waves-light" (click)="editClient(client)">Edit</button></td>
+                <td><button class="btn waves-effect waves-light red" (click)="deleteClient(client)"><i class="material-icons">delete_forever</i></button></td>
+                
+            </tr>
+        </tbody>
+    </table>
+    <button data-target="modal1" class="btn modal-trigger" (click)="openModal()">Add Client</button>
+    <div class="modal" id="modal1" materialize="modal" [materializeParams]="[{dismissible: false}]" [materializeActions]="modalActions">
+        <div class="modal-content">
+            <form class="register" #c="ngForm"  (ngSubmit)="onSubmit(c)" novalidate>
+                    <h3>Add new client</h3>
+                    <div class="input-field col s6">
+                        <input class="validate"  placeholder="Name"  name="name"  type="text" required minlength="4" #name="ngModel" [(ngModel)]="test.name">
+                        <label for="name">Name</label>
+                    </div>
+                    <div class="input-field col s6">
+                        <input class="validate" placeholder="Address" name="address" type="text" required minlength="6" #address="ngModel" [(ngModel)]="test.address">
+                        <label for="address">Address</label>
+                    </div>
+                    <div class="input-field col s6">
+                        <input class="validate" placeholder="Webite" name="website" type="text" required minlength="6" #website="ngModel" [(ngModel)]="test.website">
+                        <label for="website">Website</label>
+                    </div>
+                    <div class="input-field col s6">
+                        <input class="validate" placeholder="Phone number" name="phoneNumber" type="number" required minlength="10" #phoneNumber="ngModel" [(ngModel)]="test.phoneNumber">
+                        <label for="phoneNumber">Phone Number</label>
+                    </div>
+                    <div class="input-field col s12"
+                         [ngClass]="{
+                         'has-danger': email.invalid && (email.dirty || email.touched),
+                         'has-success': email.valid && (email.dirty || email.touched)
+                    }">
+                        <input class="validate" placeholder="Email" name="email" type="email" required [(ngModel)]="test.email" #email="ngModel" pattern="[^ @]*@[^ @]*">
+                        <label for="email">Email</label>
+                    </div>
+                    <div class="input-field col s6 switch">
+                            <input class="validate" name="packageActive" type="checkbox"  #packageActive="ngModel" [(ngModel)]="test.packageActive">
+                            <label for="packageActive">packageActive</label>
+                    </div>
+                    <div class="input-field col s6">
+                        <input class="validate" placeholder="Package Expires" name="packageExpires" type="text" required minlength="6" #packageExpires="ngModel" [(ngModel)]="test.packageExpires">
+                        <label for="packageExpires">Package Expires</label>
+                    </div>
+                    <div class="form-control-feedback" *ngIf="email.errors && (email.dirty || email.touched)">
+                            <p *ngIf="email.errors.required"> Email is Required</p>
+                            <p *ngIf="email.errors.pattern"> Email must contain @ character</p>
+                        </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button class="modal-action modal-close waves-effect waves-blue btn-flat" (click)="addClient() " [disabled]="c.invalid">Add</button>            
+            <button class="modal-action modal-close waves-effect waves-red btn-flat" (click)="closeModal()">Close</button>
+        </div>
+    </div>
+</div>
+
+

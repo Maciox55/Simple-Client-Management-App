@@ -1,0 +1,26 @@
+<div  class="navbar-fixed">
+  <nav>
+    <div materialize class="nav-wrapper light-blue darken-4">
+      <a href="#" class="center brand-logo">SRVCR</a>
+      <button data-target="mobile-demo" class="btn sidenav-trigger"><i class="material-icons">menu</i></button>
+      <ul id="nav-mobile" class="right hide-on-med-and-down">
+        <li><a href="/dashboard">Home</a></li>
+        <li><a href="#">Pricing</a></li>
+        <li><a href="#">Features</a></li>
+        <li><a href="#">About</a></li>        
+        <li><a href="#">Contact Us</a></li>
+        <li *ngIf="authed == false"><a href="/login">Login / Register</a></li>
+        <li *ngIf="authed == true"><a (click)="logOut()">Logout</a></li>
+        
+      </ul>
+    </div>
+  </nav>
+</div>
+<div class="row">
+  <router-outlet></router-outlet>
+</div>
+
+
+
+
+

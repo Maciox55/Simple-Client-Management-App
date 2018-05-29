@@ -1,5 +1,10 @@
-# MyApp
+# Client Management App
+This is the source code for the app, if you want to mess around with it you will need to build the dependencies, you can follow the Build section below. Feel free to use this code for educational/non-profit purposes. If you want to contribute feel free to do that too. 
 
+The only ourpose of this project is to get familiar with creating simple CRUD API, basic authentication and simple functioning Angular front-end.
+
+
+# Angular
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.5.0.
 
 ## Development server

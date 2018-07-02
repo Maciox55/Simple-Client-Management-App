@@ -1,7 +1,8 @@
 # Client Management App
 This is the source code for the app, if you want to mess around with it you will need to build the dependencies, you can follow the Build section below. Feel free to use this code for educational/non-profit purposes. If you want to contribute feel free to do that too. 
 
-The only ourpose of this project is to get familiar with creating simple CRUD API, basic authentication and simple functioning Angular front-end.
+CRUD API excercise using Angular 6, Angular Material with Angular flex-layout as front end. Node.js server with Express.js. for backend, 
+MongoDB for data storage. Local MongoDB authentication, passwords stored using salting and hashing, auth token generated on successful log in, later used to CRUD data belonging to user, JWT is stored in a cookie/session on client side, later sent with HTTP requests to the server along with data and verified by the server.
 
 
 # Angular

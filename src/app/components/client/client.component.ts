@@ -1,9 +1,12 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ClientsService } from '../../clients.service';
-import {MaterializeAction} from 'angular2-materialize';
 import { NgModule } from '@angular/core';
-
+import {MatTableModule, MatTableDataSource} from '@angular/material/table';
 import {EventEmitter} from'@angular/core';
+import {MatCheckboxModule} from '@angular/material/checkbox';
+import {MatPaginator, MatDialog, MatDialogRef, MAT_DIALOG_DATA} from'@angular/material';
+import {PageEvent,MatSortModule} from '@angular/material';
+import {Client} from '../../../../Client';
 import {
   ReactiveFormsModule,
   FormsModule,
@@ -14,26 +17,20 @@ import {
   NgModel,
   NgForm
 } from '@angular/forms';
+import { AddclientdialogComponent } from '../addclientdialog/addclientdialog.component';
+import { EditclientdialogComponent } from '../editclientdialog/editclientdialog.component';
 
-class Client {
-  constructor(
-    public name:string ='',
-    public address:string ='',
-    public phoneNumber:string ='',
-    public email:string='',
-    public website:string = '',
-    public packageActive:boolean=false,
-    public packageExpires:string='',
-    public _id:string ='',
-    public paymentDue:number = null
-
-  ){};
-
-}
+ 
 @NgModule({
   imports: [
       FormsModule,
-      ReactiveFormsModule
+      MatSortModule,
+      ReactiveFormsModule,
+      MatTableModule,
+      MatPaginator,
+      MatDialog,
+      MatDialogRef,
+      MatCheckboxModule
   ]
 })
 @Component({
@@ -43,47 +40,105 @@ class Client {
 })
 export class ClientComponent implements OnInit {
   text = '';
-  clients: Array<any>;
-
+  clients: Array<Client>;
+  displayedColumns = ['name','email','street','website','packageActive','paymentDue','actions'];
   test : Client = new Client();
+  opened: boolean;
   @ViewChild('c') form: any;
-  constructor(private _clientService: ClientsService) { 
-    
+  @ViewChild('e') editform: any;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  dataSource;
+
+  public financeChartLabel:string[] = ['Paid','Unpaid'];
+  public financeData:number[] = [329.99,19.99];
+  public chartType:string = 'doughnut';
+
+  public pageSize = 10;
+  public currentPage = 0;
+  public totalSize = 0;
+  
+  constructor(private _clientService: ClientsService, public dialog: MatDialog) {
   }
 
   ngOnInit() {
     this.getClient();
   }
-  modalActions = new EventEmitter<string|MaterializeAction>();
+  openDialog() {
+    let dialogRef = this.dialog.open(AddclientdialogComponent, {
+      width: '450px',
+      height:"650px"
+    });
 
+    dialogRef.afterClosed().subscribe(result => {
+      if(result){
+        console.log('The dialog was closed ' + result);
+        this._clientService.setClient(result);  
+        this.getClient(); 
+      }
+
+    });
+  }
 
   openModal(){
-    this.modalActions.emit({action:"modal",params:['open']});
-    
+    this.openDialog()
   }
   closeModal(){
-    this.modalActions.emit({action:"modal",params:['close']});
     
   }
   getClient(){
-    this._clientService.getClients().subscribe(res => this.clients = res);
+    this._clientService.getClients().subscribe(res => {
+      this.dataSource = new MatTableDataSource<Client>(res);
+      this.dataSource.paginator = this.paginator;
+      this.clients = res;
+      console.log(this.clients);
+      this.iterator();
+    });
+  }
+  editClientModal(cli:Client){
+   let dialogRef = this.dialog.open(EditclientdialogComponent,{
+      data: cli,
+      width: '450px',
+      height:"650px"
+   });
+
+   dialogRef.afterClosed().subscribe(result =>{
+      if(result)
+      {
+        console.log("test");
+        this._clientService.editClient(result);
+      }
+
+   });
   }
 
-  addClient(c : NgForm){
+  addClient(c:NgForm){
     if(this.form.valid){
-      this._clientService.setClient(this.test);  
-      this.getClient(); 
+      
       this.form.reset();      
     }
-    this.modalActions.emit({action:"modal",params:['close']});
+  }
 
-  }
-  editClient(cli: Client){
-    this.modalActions.emit({action:"modal2",params:['open']});
-    console.log(cli._id);
-  }
   deleteClient(cli: Client){
     this._clientService.deleteClient(cli);
     this.getClient(); 
   }
+  applyFilter(filterValue: string) {
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
+
+  public handlePage(e: any) {
+    this.currentPage = e.pageIndex;
+    this.pageSize = e.pageSize;
+    this.iterator();
+  }
+
+  private iterator(){
+    const end = (this.currentPage + 1) * this.pageSize;
+    const start = this.currentPage * this.pageSize;
+    const part = this.clients.slice(start, end);
+    this.dataSource = part;
+
+  }
+
+  
 }

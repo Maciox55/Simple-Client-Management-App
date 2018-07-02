@@ -1,0 +1,40 @@
+<div fxFlexFill fxLayout="column" fxFlexFill>
+  <h2  mat-dialog-title>Edit Client</h2>
+  <mat-dialog-content>
+      <form fxLayout="column" fxFlex="100%"  class="register" #e="ngForm"  (ngSubmit)="editClient(e)" novalidate>
+          <mat-form-field fxFlex="100%" id="loginForm">
+            <mat-label>Name</mat-label>
+            <input matInput class="validate"  placeholder="{{test.name}}"  name="name"  type="text" required minlength="4" #name="ngModel" [(ngModel)]="test.name">
+          </mat-form-field>
+          <mat-form-field fxFlex="100%">
+            <mat-label>E-Mail</mat-label>
+            <input matInput class="validate"  placeholder="{{test.email}}"  name="email"  type="email" required minlength="2" #name="ngModel" [(ngModel)]="test.email">
+          </mat-form-field>
+          <mat-form-field fxFlex="100%">
+              <mat-label>Address</mat-label>
+              <input matInput class="validate" placeholder="{{test.street}}" name="street" type="text" required minlength="6" #address="ngModel" [(ngModel)]="test.street">
+          </mat-form-field>
+          <mat-form-field fxFlex="100%">
+              <mat-label>Webite</mat-label>
+              <input matInput class="validate" placeholder="{{test.website}}" name="website" type="text" required minlength="6" #website="ngModel" [(ngModel)]="test.website">
+          </mat-form-field>
+          <mat-form-field fxFlex="100%">
+              <mat-label>Phone Number</mat-label>
+              <input matInput class="validate" placeholder="{{test.phoneNumber}}" name="phoneNumber" type="number" required minlength="10" #phoneNumber="ngModel" [(ngModel)]="test.phoneNumber">
+          </mat-form-field>
+          <mat-form-field fxFlex="100%">
+              <mat-label>Package Expires</mat-label>
+              <input matInput class="validate" placeholder="{{test.packageExpires}}" name="packageExpires" type="text" required minlength="6" #packageExpires="ngModel" [(ngModel)]="test.packageExpires">
+          </mat-form-field>
+          <mat-form-field fxFlex="100%">
+                <mat-label>Payment Due</mat-label>
+                <input matInput class="validate" placeholder="{{test.paymentDue}}" name="paymentDue" type="number" required minlength="1" #paymentDue="ngModel" [(ngModel)]="test.paymentDue">
+            </mat-form-field>
+        </form>
+
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <button mat-button mat-dialog-close>Cancel</button>
+    <button mat-button color="primary" type="submit" name="action" [disabled]="e.invalid" (click)="editClient(test) ">Submit</button>
+  </mat-dialog-actions>
+</div>

@@ -3,7 +3,6 @@ import { UserService} from '../app/services/user.service';
 import { Subject } from 'rxjs';
 import { Observable } from 'rxjs/Observable';
 
-
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -12,7 +11,7 @@ import { Observable } from 'rxjs/Observable';
 
 export class AppComponent implements OnInit {
     username;
-    authed:boolean;
+    authed: boolean;
     temp;
     constructor(private user: UserService){}
 
@@ -20,11 +19,15 @@ export class AppComponent implements OnInit {
       this.temp = this.user.getUserAuthed.subscribe(res => {
         console.log(res);
         this.authed = res;
+        if(this.authed == true){
+          this.username = this.user.getUsername();
+          console.log(this.username);
+        }
+
+
       });
     }
-    logOut(){
+    logOut() {
       this.user.logOut();
     }
-    
-
 }

@@ -67,7 +67,7 @@ export class LoginComponent implements OnInit {
    interface Token{
     token:string;
     auth:string;
-
+    user:string
    }
 
   }

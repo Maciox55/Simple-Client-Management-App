@@ -29,7 +29,6 @@ module.exports={
         }else{
             console.log("VALIDATING HASH: "+ testHash.passwordHash);
             return passwordValid = true;
-
         }
 
     },

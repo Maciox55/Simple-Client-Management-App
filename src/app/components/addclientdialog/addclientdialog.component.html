@@ -1,0 +1,97 @@
+<div fxFlexFill fxLayout="column" fxFlexFill>
+  <h2  mat-dialog-title>Add new Client</h2>
+  <mat-dialog-content>
+      <form fxLayout="column" fxFlex="100%"  class="register" #c="ngForm"  (ngSubmit)="addClient(c)" novalidate>
+          <mat-form-field fxFlex="100%" id="loginForm">
+            <mat-label>Name</mat-label>
+            <input matInput class="validate"  placeholder="Name"  name="name"  type="text" required minlength="4" #name="ngModel" [(ngModel)]="test.name">
+          </mat-form-field>
+          <mat-form-field fxFlex="100%">
+            <mat-label>E-Mail</mat-label>
+            <input matInput class="validate"  placeholder="Email"  name="email"  type="email" required minlength="2" #name="ngModel" [(ngModel)]="test.email">
+          </mat-form-field>
+          <mat-form-field fxFlex="100%">
+              <mat-label>Address</mat-label>
+              <input matInput class="validate" placeholder="Address" name="address" type="text" required minlength="6" #address="ngModel" [(ngModel)]="test.address">
+          </mat-form-field>
+          <mat-form-field fxFlex="100%">
+              <mat-label>Webite</mat-label>
+              <input matInput class="validate" placeholder="Webite" name="website" type="text" required minlength="6" #website="ngModel" [(ngModel)]="test.website">
+          </mat-form-field>
+          <mat-form-field fxFlex="100%">
+              <mat-label>Phone Number</mat-label>
+              <input matInput class="validate" placeholder="Phone number" name="phoneNumber" type="number" required minlength="10" #phoneNumber="ngModel" [(ngModel)]="test.phoneNumber">
+          </mat-form-field>
+          <mat-form-field fxFlex="100%">
+              <mat-label>Package Expires</mat-label>
+              <input matInput class="validate" placeholder="Package Expires" name="packageExpires" type="text" required minlength="6" #packageExpires="ngModel" [(ngModel)]="test.packageExpires">
+          </mat-form-field>
+          <mat-form-field fxFlex="100%">
+                <mat-label>Payment Due</mat-label>
+                <input matInput class="validate" placeholder="Payment Due" name="paymentDue" type="number" required minlength="1" #paymentDue="ngModel" [(ngModel)]="test.paymentDue">
+            </mat-form-field>
+        </form>
+
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <button mat-button mat-dialog-close>Cancel</button>
+    <button mat-button color="primary" type="submit" name="action" [disabled]="c.invalid" (click)="addClient(c) ">Submit</button>
+  </mat-dialog-actions>
+</div>
+
+
+
+
+
+
+
+<!--
+
+
+  <div class="modal" id="modal1" materialize="modal" >
+      <div class="modal-content">
+          <form class="register" #c="ngForm"  (ngSubmit)="onSubmit(c)" novalidate>
+                  <h3>Add new client</h3>
+                  <div class="input-field col s6">
+                      <input class="validate"  placeholder="Name"  name="name"  type="text" required minlength="4" #name="ngModel" [(ngModel)]="test.name">
+                      <label for="name">Name</label>
+                  </div>
+                  <div class="input-field col s6">
+                      <input class="validate" placeholder="Address" name="address" type="text" required minlength="6" #address="ngModel" [(ngModel)]="test.address">
+                      <label for="address">Address</label>
+                  </div>
+                  <div class="input-field col s6">
+                      <input class="validate" placeholder="Webite" name="website" type="text" required minlength="6" #website="ngModel" [(ngModel)]="test.website">
+                      <label for="website">Website</label>
+                  </div>
+                  <div class="input-field col s6">
+                      <input class="validate" placeholder="Phone number" name="phoneNumber" type="number" required minlength="10" #phoneNumber="ngModel" [(ngModel)]="test.phoneNumber">
+                      <label for="phoneNumber">Phone Number</label>
+                  </div>
+                  <div class="input-field col s12"
+                       [ngClass]="{
+                       'has-danger': email.invalid && (email.dirty || email.touched),
+                       'has-success': email.valid && (email.dirty || email.touched)
+                  }">
+                      <input class="validate" placeholder="Email" name="email" type="email" required [(ngModel)]="test.email" #email="ngModel" pattern="[^ @]*@[^ @]*">
+                      <label for="email">Email</label>
+                  </div>
+                  <div class="input-field col s6 switch">
+                          <input class="validate" name="packageActive" type="checkbox"  #packageActive="ngModel" [(ngModel)]="test.packageActive">
+                          <label for="packageActive">packageActive</label>
+                  </div>
+                  <div class="input-field col s6">
+                      <input class="validate" placeholder="Package Expires" name="packageExpires" type="text" required minlength="6" #packageExpires="ngModel" [(ngModel)]="test.packageExpires">
+                      <label for="packageExpires">Package Expires</label>
+                  </div>
+                  <div class="form-control-feedback" *ngIf="email.errors && (email.dirty || email.touched)">
+                          <p *ngIf="email.errors.required"> Email is Required</p>
+                          <p *ngIf="email.errors.pattern"> Email must contain @ character</p>
+                  </div>
+          </form>
+      </div>
+      <div class="modal-footer">
+          <button class="modal-action modal-close waves-effect waves-blue btn-flat" (click)="addClient() " [disabled]="c.invalid">Add</button>            
+          <button class="modal-action modal-close waves-effect waves-red btn-flat" (click)="closeModal()">Close</button>
+      </div>
+-->

@@ -1,6 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgModule } from '@angular/core';
 import { Observable} from 'rxjs';
+import { Router} from '@angular/router';
+import { UserService} from '../../services/user.service';
+
 import {
   ReactiveFormsModule,
   FormsModule,
@@ -11,7 +14,8 @@ import {
   NgModel,
   NgForm
 } from '@angular/forms';
-import { HttpClient} from '@angular/common/http';
+import { Http, Response, RequestOptions, Headers, HttpModule } from '@angular/http';
+
 class NewUser {
   constructor(
     public username:string ='',
@@ -38,7 +42,7 @@ export class RegisterComponent implements OnInit {
   @ViewChild('f') form: any;
   readonly ROOT_URL = 'http://localhost:3000';
 
-  constructor(private http: HttpClient) { 
+  constructor(private _http: Http, private router: Router, private user: UserService) { 
     
   }
 
@@ -59,7 +63,7 @@ export class RegisterComponent implements OnInit {
       password: u.password,
       email: u.email
     }
-   this.http.post(this.ROOT_URL+'/api/register',data).subscribe((response: any)=>{
+   this._http.post(this.ROOT_URL+'/api/register',data).subscribe((response: any)=>{
       if(response.status === 200){
         console.log('success');
       }

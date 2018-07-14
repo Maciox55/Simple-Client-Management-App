@@ -48,7 +48,7 @@ export class ClientComponent implements OnInit {
   @ViewChild('e') editform: any;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   dataSource;
-
+  totalOutstanding:any;
   public financeChartLabel:string[] = ['Paid','Unpaid'];
   public financeData:number[] = [329.99,19.99];
   public chartType:string = 'doughnut';
@@ -72,7 +72,8 @@ export class ClientComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if(result){
         console.log('The dialog was closed ' + result);
-        this._clientService.setClient(result);  
+        this._clientService.setClient(result);
+        this.clients.push(result);
         this.getClient(); 
       }
 
@@ -92,6 +93,10 @@ export class ClientComponent implements OnInit {
       this.clients = res;
       console.log(this.clients);
       this.iterator();
+      for(var i = 0; i<this.clients.length; i++)
+      {
+        this.totalOutstanding += this.clients[i].paymentDue;
+      }
     });
   }
   editClientModal(cli:Client){

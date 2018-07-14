@@ -54,10 +54,13 @@ export class LoginComponent implements OnInit {
       if(res.status === 200){
         var resp = <Token>res.json();
         localStorage.setItem("token",resp.token);
-        localStorage.setItem("auth",resp.auth);
+        this.user.setToken(resp.token);
+        localStorage.setItem("username",resp.username);
         console.log(resp.token);
-        this.user.setUserAuthed(true);
+        this.user.setUserAuthed(resp.auth);
+        console.log("Auth at login " + resp.auth);
         this.router.navigate(['/dashboard']);
+
       }
    },error =>{
       console.log(error);
@@ -66,8 +69,8 @@ export class LoginComponent implements OnInit {
 
    interface Token{
     token:string;
-    auth:string;
-    user:string
+    auth:boolean;
+    username:string
    }
 
   }

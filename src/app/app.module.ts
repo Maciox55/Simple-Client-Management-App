@@ -33,6 +33,11 @@ import { AddclientdialogComponent } from './components/addclientdialog/addclient
 import {MatExpansionModule} from '@angular/material/expansion';
 import { EditclientdialogComponent } from './components/editclientdialog/editclientdialog.component';
 import { ChartsModule } from 'ng2-charts';
+import { JwtModule } from '@auth0/angular-jwt';
+
+export function tokenGetter() {
+  return localStorage.getItem('token');
+};
 
 const appRoute: Routes =[
     {path:'dashboard', component: ClientComponent},
@@ -81,7 +86,14 @@ const appRoute: Routes =[
     MatSidenavModule,
     MatDialogModule,
     MatPaginatorModule,
-    ChartsModule
+    ChartsModule,
+    JwtModule.forRoot({
+      config: {
+        tokenGetter:tokenGetter,
+        whitelistedDomains:['localhost:3000'],
+        blacklistedRoutes:['localhost:3000/auth']
+      }
+    })
   ],
   exports: [
     RouterModule
@@ -91,4 +103,5 @@ const appRoute: Routes =[
   UserService],
   bootstrap: [AppComponent]
 })
+
 export class AppModule { }

@@ -33,14 +33,14 @@ module.exports={
 
     },
     generateJWT: function(user, secret){
-        var newToken = jwt.sign(user,secret,{expiresIn:'1h'});
+        var newToken = jwt.sign(user,secret,{expiresIn:'3m'});
         console.log(newToken);
         return newToken;
     },
     validateJWT: function(token, secret){
         var decoded = jwt.verify(token, secret);
         return decoded;
-
+        
     }
 
 }

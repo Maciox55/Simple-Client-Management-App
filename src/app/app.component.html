@@ -1,9 +1,9 @@
 <mat-toolbar color="primary" id="navbar" class="mat-elevation-z6">
     <button mat-button routerLink="">SRVCR</button>
     <span class="toolbar-spacer"></span>
-    <button mat-button *ngIf="authed == true" routerLink="/dashboard">Dashboard</button>
-    <button mat-button *ngIf="authed == false" routerLink="/login">Log In</button>
-    <button mat-button *ngIf="authed == true" (click)="logOut()">{{username}} Logout</button>      
+    <button mat-button *ngIf="authed === true" routerLink="/dashboard">Dashboard</button>
+    <button mat-button *ngIf="authed === false" routerLink="/login">Log In</button>
+    <button mat-button *ngIf="authed === true" (click)="logOut()">{{username}} Logout</button>      
 </mat-toolbar>
 <router-outlet></router-outlet>
 

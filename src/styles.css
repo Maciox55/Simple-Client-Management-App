@@ -20,12 +20,12 @@ mat-drawer{
     padding-right: 2px;
     margin-top: 64px;
 }
-
 body{
     background-color: rgba(245, 245, 245, 0.5);
 }
 table{
     width: 100%;
+    height: 500px;
 }
 .h20{
     height: 150px;
@@ -44,6 +44,9 @@ table{
 }
 .container{
     height: 100%;
+}
+.overflow{
+    overflow-y: auto;
 }
 .offset{
     margin-top: 64px;

@@ -6,19 +6,11 @@ const encryption = require('../utils/encryption.js');
 const config = require('../config');
 const ObjectID = require('mongodb').ObjectID;
 const clientUtil = require('../utils/mongoUtil.js');
-//const db = require("../config").mongoURI;
 var crypto = require('crypto');
 
 const Client = require('../Models/ClientModel.js');
 const User = require('../Models/UserModel.js');
 var db = mongoose.connection;
-// mongoUtil.connectToServer(function(err){
-//     if(err)
-//     {
-//         console.log(err);
-//     }
-//     db = mongoUtil.getDb();
-// });
 
 mongoose.connect('mongodb://localhost/srvcr').then(()=> console.log('MongoDB connected...')).catch(err => console.log(err));
 
@@ -53,8 +45,7 @@ router.get('/users',(req,res) =>{
 router.post('/clients',(req,res)=>{
     var token = req.body.params.token;
     console.log("CLIENTS POST REQUEST");
-    if(token != null){
-        if(encryption.validateJWT(token,config.jwtSecret)){
+        if(token != null && encryption.validateJWT(req.query.token, config.jwtSecret).exp > Math.floor(Date.now()/1000)){
             var client =  new Client({
                 ownerID: encryption.validateJWT(token, config.jwtSecret).id,
                 name: req.body.params.client.name,
@@ -71,16 +62,13 @@ router.post('/clients',(req,res)=>{
         }else{
             console.log("BAD TOKEN");
         };
-
-    };
 });
-
 
 router.get('/clients',(req,res) =>{
         console.log("INCOMING GET FOR CLIENTS: TOKEN: " + req.query.token);
-        dateNow = new Date();
-        if (req.query.token != null){
-            if(encryption.validateJWT(req.query.token, config.jwtSecret) || !(encryption.validateJWT(req.query.token, config.jwtSecret).exp)>dateNow.getTime()){
+        console.log("Date NOW: " +  Math.floor(Date.now()/1000));
+        if (req.query.token != null && encryption.validateJWT(req.query.token, config.jwtSecret).exp > Math.floor(Date.now()/1000)){
+            if(encryption.validateJWT(req.query.token, config.jwtSecret).exp > Math.floor(Date.now()/1000)){
                 var tok = encryption.validateJWT(req.query.token, config.jwtSecret);
                 console.log(tok.id);
                 Client.find({'ownerID':tok.id}).then((clients) =>{
@@ -89,31 +77,19 @@ router.get('/clients',(req,res) =>{
                 }).catch((err) =>{
                     console.log(err);
                 });
-
-                // db.collection('clients')
-                // .find({'ownerID':tok.id})
-                // .toArray()
-                // .then((clients) =>{
-                //     response.data = clients;
-                //     res.json(response);
-                // })
-                // .catch((err) =>{
-                //     sendError(err, res);
-                // });
             }else{
-                console.log("BAD TOKEN");
+                console.log("BAD TOKEN OR EXPIRED TOKEN");
             };
         };
 });
 
 router.put('/clients',(req,res)=>{
     //console.log(req.body.params);
-    if(req.body.params.token != null){
-        //console.log(req.body.params.token);
+    if(req.query.token != null && encryption.validateJWT(req.query.token, config.jwtSecret).exp > Math.floor(Date.now()/1000)){
+            //console.log(req.body.params.token);
         var tok = encryption.validateJWT(req.body.params.token, config.jwtSecret);
-
-            //console.log(tok.id);
-            // console.log(req.body.params.client._id);
+                //console.log(tok.id);
+                // console.log(req.body.params.client._id);
             var client = {
                 ownerID: req.body.params.client.ownerID,
                 name: req.body.params.client.name,
@@ -131,23 +107,20 @@ router.put('/clients',(req,res)=>{
                 }
                 console.log(doc);
             });
-
-
-            // db.collection('clients').updateOne({'_id':ObjectID(req.body.params.client._id)},{$set:client},function(err){
-            //     if(err){
-            //         console.log(req.body.params.client._id);
-            //     }
-            // });
-    };
+        }else{
+            console.log("TOKEN EXPIRED");
+        }
 });
 
 router.delete('/clients',(req,res)=>{
     console.log("INCOMING DELETE FOR CLIENTS ");
-    if(req.query.token!=null){
+    if(req.query.token!=null && encryption.validateJWT(req.query.token, config.jwtSecret).exp > Math.floor(Date.now()/1000)){
         if(encryption.validateJWT(req.query.token, config.jwtSecret)){
             db.collection('clients')
             .deleteOne({'_id':ObjectID(req.query.client)});
         }
+    }else{
+        console.log("TOKEN EXPIRED");
     }
 });
 
@@ -186,43 +159,9 @@ router.post('/register',(req,res) =>{
             console.log(passwordData2.passwordHash);
     
             userInfo.save();
+
         }
-
     });
-    
-    
-
-
-
-
-    // var doc =db.collection('users')
-    // .findOne({"email" : userInfo.email},function(err,call, callback){
-    //     if(err){
-    //         console.log(err);
-    //     } else if(call != null){
-    //         if(call.email == userInfo.email)
-    //         {
-    //             //console.log(call.email + ' '+ userInfo.email);
-    //             console.log("This Email or Username is already used");
-    //             res.send("Email is already in use!");
-    //         }
-    //     } else if(call == null){
-            
-    //         console.log("No email found, proceed");
-    //         passwordData = encryption.saltHashPassword(userInfo.password);
-    //         userInfo.salt = passwordData.salt;
-    //         userInfo.passwordHash = passwordData.passwordHash;
-    //         console.log(passwordData.passwordHash + ' Salt: ' + passwordData.salt);
-
-
-    //         passwordData2 = encryption.sha512(userInfo.password, userInfo.salt);
-    //         userInfo.password = "This isn't the password you are looking for! *Jedi mind trick hand motion*"
-    //         console.log(passwordData2.passwordHash);
-
-    //         db.collection('users').insert(userInfo);
-    //     }
-    // });
-    // console.log(userInfo);
 });
 
 router.post('/login',(req,res)=>{
@@ -246,45 +185,15 @@ router.post('/login',(req,res)=>{
                     id: doc._id
                 }
                 token = encryption.generateJWT(jwtData, config.jwtSecret);
-                console.log(valid);
-                res.status(200).send({ auth: true, token: token });
+                //console.log(valid);
+                res.status(200).send({username:userInfo.username, auth: true, token: token });
             }
             else{
                 res.redirect();
             }
         }
     });
-
-
-
-    // db.collection('users').findOne({"username": userInfo.username}, function(err,call){
-    //     if(err){
-    //         console.log(err);
-    //     }else if(call == null){
-    //         console.log("Username not found");
-    //         res.status(300).send({redirect:"/register"});
-    //     } else{
-    //         var valid = encryption.validateHash(userInfo.password, call.salt, call.passwordHash);
-
-    //         if(valid == true){
-    //             jwtData = {
-    //                 id: call._id
-    //             }
-    //             token = encryption.generateJWT(jwtData, config.jwtSecret);
-    //             console.log(valid);
-    //             res.status(200).send({ auth: true, token: token });
-    //         }else{
-    //             res.redirect();
-    //         }
-            
-    //         //console.log("Registered user found" + userInfo );
-    //         //console.log("Password valid: " + valid);
-            
-    //     }
-    // });
-
-
-    console.log("login attempt " + userInfo.username);
+    console.log("Login attempt: " + userInfo.username);
 
 });
 

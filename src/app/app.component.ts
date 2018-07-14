@@ -11,22 +11,28 @@ import { Observable } from 'rxjs/Observable';
 
 export class AppComponent implements OnInit {
     username;
-    authed: boolean;
+    authed:any;
     temp;
-    constructor(private user: UserService){}
-
-    ngOnInit() {
-      this.temp = this.user.getUserAuthed.subscribe(res => {
-        console.log(res);
+    constructor(private user: UserService){
+      this.user.getUserAuthed.subscribe(res=>{
+        console.log(res + " Auth Observable Test");
         this.authed = res;
-        if(this.authed == true){
-          this.username = this.user.getUsername();
-          console.log(this.username);
-        }
-
-
+        this.username = this.user.getUsername();
       });
+
     }
+    
+    ngOnInit() {
+      // this.temp = this.user.getUserAuthed();
+      //   console.log(this.temp);
+      //   this.authed = this.temp;
+        
+      //   if(this.authed == true){
+      //     this.username = this.user.getUsername();
+      //     console.log(this.username);
+      //   }
+    }
+
     logOut() {
       this.user.logOut();
     }

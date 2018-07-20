@@ -10,8 +10,8 @@ export class ClientsService {
   
   constructor(private _http: Http, private router: Router) { }
   getClients(){
-    if(localStorage.getItem("token")!= null){
-      return this._http.get('/api/clients', {params: {token:localStorage.getItem("token")}}).map(result => this.result = result.json().data);
+    if(localStorage.getItem("token")!= ""){
+      return this._http.get(this.ROOT_URL+'/api/clients', {params: {token:localStorage.getItem("token")}}).map(result => this.result = result.json().data);
     }
     else{
       this.router.navigate(['/login']);

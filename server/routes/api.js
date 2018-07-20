@@ -43,11 +43,10 @@ router.get('/users',(req,res) =>{
         });
 });
 router.post('/clients',(req,res)=>{
-    var token = req.body.params.token;
     console.log("CLIENTS POST REQUEST");
-        if(token != null && encryption.validateJWT(req.query.token, config.jwtSecret).exp > Math.floor(Date.now()/1000)){
+        if(req.body.params.token != null && encryption.validateJWT(req.body.params.token, config.jwtSecret).exp > Math.floor(Date.now()/1000)){
             var client =  new Client({
-                ownerID: encryption.validateJWT(token, config.jwtSecret).id,
+                ownerID: encryption.validateJWT(req.body.params.token, config.jwtSecret).id,
                 name: req.body.params.client.name,
                 street: req.body.params.client.address,
                 phoneNumber: req.body.params.client.phoneNumber,
@@ -65,51 +64,49 @@ router.post('/clients',(req,res)=>{
 });
 
 router.get('/clients',(req,res) =>{
-        console.log("INCOMING GET FOR CLIENTS: TOKEN: " + req.query.token);
-        console.log("Date NOW: " +  Math.floor(Date.now()/1000));
-        if (req.query.token != null && encryption.validateJWT(req.query.token, config.jwtSecret).exp > Math.floor(Date.now()/1000)){
-            if(encryption.validateJWT(req.query.token, config.jwtSecret).exp > Math.floor(Date.now()/1000)){
-                var tok = encryption.validateJWT(req.query.token, config.jwtSecret);
-                console.log(tok.id);
-                Client.find({'ownerID':tok.id}).then((clients) =>{
-                    response.data = clients;
-                    res.json(response);
-                }).catch((err) =>{
-                    console.log(err);
-                });
-            }else{
-                console.log("BAD TOKEN OR EXPIRED TOKEN");
-            };
-        };
+    // console.log("INCOMING GET FOR CLIENTS: TOKEN: " + req.body.params.token);
+    console.log("Date NOW: " +  Math.floor(Date.now()/1000));
+    if (req.query.token != null && (encryption.validateJWT(req.query.token, config.jwtSecret).exp > Math.floor(Date.now()/1000))){     
+        var tok = encryption.validateJWT(req.query.token, config.jwtSecret);
+        console.log(tok.id);
+        Client.find({'ownerID':tok.id}).then((clients) =>{
+        response.data = clients;
+            res.json(response);
+        }).catch((err) =>{
+            console.log(err);
+        });
+    }else{
+        console.log("BAD TOKEN OR EXPIRED TOKEN");
+    };    
 });
 
 router.put('/clients',(req,res)=>{
-    //console.log(req.body.params);
-    if(req.query.token != null && encryption.validateJWT(req.query.token, config.jwtSecret).exp > Math.floor(Date.now()/1000)){
+    console.log("JWT EXP: "+encryption.validateJWT(req.body.params.token, config.jwtSecret).exp);
+    if(req.body.params.token != null && (encryption.validateJWT(req.body.params.token, config.jwtSecret).exp > Math.floor(Date.now()/1000))){
             //console.log(req.body.params.token);
         var tok = encryption.validateJWT(req.body.params.token, config.jwtSecret);
                 //console.log(tok.id);
                 // console.log(req.body.params.client._id);
-            var client = {
-                ownerID: req.body.params.client.ownerID,
-                name: req.body.params.client.name,
-                street: req.body.params.client.address,
-                phoneNumber: req.body.params.client.phoneNumber,
-                email: req.body.params.client.email,
-                website: req.body.params.client.website,
-                packageActive: req.body.params.client.packageActive,
-                packageExpires:new Date(req.body.params.client.packageExpires),
-                paymentDue: req.body.params.client.paymentDue
-            };
-            Client.findByIdAndUpdate(ObjectID(req.body.params.client._id),client,function(err,doc){
-                if(err){
-                    console.log(err);
-                }
-                console.log(doc);
-            });
-        }else{
-            console.log("TOKEN EXPIRED");
-        }
+        var client = {
+            ownerID: req.body.params.client.ownerID,
+            name: req.body.params.client.name,
+            street: req.body.params.client.street,
+            phoneNumber: req.body.params.client.phoneNumber,
+            email: req.body.params.client.email,
+            website: req.body.params.client.website,
+            packageActive: req.body.params.client.packageActive,
+            packageExpires:new Date(req.body.params.client.packageExpires),
+            paymentDue: req.body.params.client.paymentDue
+        };
+        Client.findByIdAndUpdate(ObjectID(req.body.params.client._id),client,function(err,doc){
+            if(err){
+                console.log(err);
+            }
+            console.log(doc);
+        });
+    }else{
+        console.log("TOKEN EXPIRED");
+    }
 });
 
 router.delete('/clients',(req,res)=>{

@@ -33,7 +33,7 @@ module.exports={
 
     },
     generateJWT: function(user, secret){
-        var newToken = jwt.sign(user,secret,{expiresIn:'3m'});
+        var newToken = jwt.sign(user,secret,{expiresIn:'1h'});
         console.log(newToken);
         return newToken;
     },

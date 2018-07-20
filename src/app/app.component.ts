@@ -26,7 +26,7 @@ export class AppComponent implements OnInit {
       // this.temp = this.user.getUserAuthed();
       //   console.log(this.temp);
       //   this.authed = this.temp;
-        
+         
       //   if(this.authed == true){
       //     this.username = this.user.getUsername();
       //     console.log(this.username);
